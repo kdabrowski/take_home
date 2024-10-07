@@ -64,11 +64,12 @@ RSpec.describe 'Event requests', type: :request do
   describe '#book' do
     let!(:user_2) { create(:user, user_name: 'otheruser123', password: 'somepass') }
     let!(:event) { create(:event, name: 'Event nr 1', organiser: user) }
-    let(:params) { { event_id: event.id }.to_json }
+    let(:params) { { event_id: event.id } }
     let!(:token) { generate_token(user_2) }
 
     it 'it books an event' do
-      post '/api/v1/events/book', params: params, headers: headers
+      post '/api/v1/events/book', params: params.to_json, headers: headers
+
       expect(JSON.parse(response.body)['event']).to eq('Event booked')
       expect(user_2.participating_events.count).to eq(1)
     end
