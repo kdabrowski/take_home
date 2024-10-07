@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class User < ActiveRecord::Base
   has_secure_password
 
@@ -7,5 +9,4 @@ class User < ActiveRecord::Base
 
   has_many :event_participants
   has_many :participating_events, through: :event_participants, source: :event
-
 end

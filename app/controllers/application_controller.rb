@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ApplicationController < ActionController::API
   before_action :authorized, except: [:create]
 
@@ -14,22 +16,21 @@ class ApplicationController < ActionController::API
     JWT.decode(token, secret_token)
   end
 
-  def current_user 
-    return unless decoded_token
-
-    user_id = decoded_token[0]['user_id']
-    @user = User.find_by(id: user_id)
-  end
-
   def authorized
-    return unless !!current_user
+    return true if current_user
 
-    render json: { message: 'Please log in' }, status: :unauthorized
+    render json: { message: 'Unauthorised' }, status: :unauthorized
   end
 
   private
 
   def secret_token
     Rails.application.credentials.jwt[:secret_key]
+  end
+
+  def current_user
+    return nil unless decoded_token
+
+    @current_user ||= User.find_by(id: decoded_token.first['user_id'])
   end
 end

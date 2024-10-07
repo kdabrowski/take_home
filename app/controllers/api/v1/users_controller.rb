@@ -1,25 +1,28 @@
 # frozen_string_literal: true
 
-class Api::V1::UsersController < ApplicationController
-  def create
-    user = User.new(user_params)
+module Api
+  module V1
+    class UsersController < ApplicationController
+      skip_before_action :authorized, only: [:create]
 
-    if user.valid?
-      user.save
+      def create
+        user = User.new(user_params)
 
-      @token = encode_token(user_id: user.id)
-      render json: {
-        user: UserSerializer.new(user),
-        token: @token
-      }, status: :created
-    else
-      render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
+        if user.valid?
+          user.save
+
+          token = encode_token(user_id: user.id)
+          render json: { user: UserSerializer.new(user).serializable_hash, token: token }, status: :created
+        else
+          render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
+        end
+      end
+
+      private
+
+      def user_params
+        params.permit(:name, :last_name, :password, :email, :user_name)
+      end
     end
-  end
-
-  private
-
-  def user_params
-    params.permit(:name, :last_name, :password, :email, :user_name)
   end
 end

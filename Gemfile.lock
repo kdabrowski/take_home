@@ -73,8 +73,11 @@ GEM
     date (3.3.4)
     diff-lcs (1.5.0)
     erubi (1.13.0)
-    factory_bot (6.2.1)
+    factory_bot (6.4.5)
       activesupport (>= 5.0.0)
+    factory_bot_rails (6.4.3)
+      factory_bot (~> 6.4)
+      railties (>= 5.0.0)
     ffi (1.17.0-x86_64-darwin)
     globalid (1.1.0)
       activesupport (>= 5.0)
@@ -199,7 +202,7 @@ DEPENDENCIES
   active_model_serializers (~> 0.10.12)
   bcrypt (~> 3.1.7)
   bootsnap (>= 1.4.2)
-  factory_bot
+  factory_bot_rails
   jwt
   listen (~> 3.2)
   pg (~> 1.4)

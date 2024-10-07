@@ -1,4 +1,7 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
+include LoginHelper
 
 RSpec.describe 'user requests', type: :request do
   let(:params) do
@@ -10,7 +13,7 @@ RSpec.describe 'user requests', type: :request do
       password: 'Password1'
     }
   end
- 
+
   describe '#crate' do
     subject { post '/api/v1/users/create', params: params }
     it 'creates a new user' do
@@ -20,10 +23,13 @@ RSpec.describe 'user requests', type: :request do
     it 'returns user data' do
       subject
 
-      expect(JSON.parse(response.body)["user"]).to include(
-        'user_name' => 'TestUser',
-        'email' => 'example@email.com'
-      )
+      expect(JSON.parse(response.body)['user'].keys).to eq(%w[id user_name])
+    end
+
+    it 'the response contains a token' do
+      subject
+
+      expect(JSON.parse(response.body)['token'].empty?).to be(false)
     end
   end
 end
